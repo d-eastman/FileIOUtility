@@ -1,16 +1,18 @@
-﻿using System;
+﻿using FileIOUtility.Common;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using FileIOUtility.Common;
 
 namespace FileIOUtility.Text
 {
     public class TextFile : FileBase, IFile, ITextFile
     {
-        public static readonly TextFile Instance = new TextFile();
+        public static readonly new TextFile Instance = new TextFile(); //This instance variable replaces base class instance variable
+
+        private const bool WRITE_MODE_APPEND = true;
+
+        private const bool WRITE_MODE_OVERWRITE = false;
 
         private TextFile()
         {
@@ -19,144 +21,115 @@ namespace FileIOUtility.Text
 
         public string ToString(string filename)
         {
-           using(StreamReader reader = new StreamReader(filename))
-           {
-               return reader.ReadToEnd();
-           }
+            return StreamReaderReadToEnd(filename);
+        }
+
+        public string[] ToArray(string filename)
+        {
+            return StreamReaderReadLines(filename).ToArray<string>();
+        }
+
+        public IList<string> ToList(string filename)
+        {
+            return StreamReaderReadLines(filename);
+        }
+
+        public StringBuilder ToStringBuilder(string filename)
+        {
+            return new StringBuilder(StreamReaderReadToEnd(filename));
+        }
+
+        public object ToObject(string filename)
+        {
+            return (object)StreamReaderReadToEnd(filename);
         }
 
         public void OverwriteTo(string filename, string text)
         {
-            using (StreamWriter writer = new StreamWriter(filename, append: false))
+            StreamWriterWrite(filename, text, writeMode: WRITE_MODE_OVERWRITE);
+        }
+
+        public void OverwriteTo(string filename, string[] lines)
+        {
+            StreamWriterWrite(filename, lines, writeMode: WRITE_MODE_OVERWRITE);
+        }
+
+        public void OverwriteTo(string filename, IList<string> lines)
+        {
+            StreamWriterWrite(filename, lines.ToArray<string>(), writeMode: WRITE_MODE_OVERWRITE);
+        }
+
+        public void OverwriteTo(string filename, object o)
+        {
+            StreamWriterWrite(filename, o.ToString(), writeMode: WRITE_MODE_OVERWRITE);
+        }
+
+        public void AppendTo(string filename, string text)
+        {
+            StreamWriterWrite(filename, text, writeMode: WRITE_MODE_APPEND);
+        }
+
+        public void AppendTo(string filename, string[] lines)
+        {
+            StreamWriterWrite(filename, lines, writeMode: WRITE_MODE_APPEND);
+        }
+
+        public void AppendTo(string filename, IList<string> lines)
+        {
+            StreamWriterWrite(filename, lines.ToArray<string>(), writeMode: WRITE_MODE_APPEND);
+        }
+
+        public void AppendTo(string filename, StringBuilder sb)
+        {
+            StreamWriterWrite(filename, sb.ToString(), writeMode: WRITE_MODE_APPEND);
+        }
+
+        public void AppendTo(string filename, object o)
+        {
+            StreamWriterWrite(filename, o.ToString(), writeMode: WRITE_MODE_APPEND);
+        }
+
+        private void StreamWriterWrite(string filename, string text, bool writeMode)
+        {
+            string[] textAsArray = new string[1];
+            textAsArray[0] = text;
+            StreamWriterWrite(filename, textAsArray, writeMode);
+        }
+
+        private void StreamWriterWrite(string filename, string[] lines, bool writeMode)
+        {
+            using (StreamWriter writer = new StreamWriter(filename, append: writeMode))
             {
-                writer.Write(text);
+                foreach (string line in lines)
+                {
+                    writer.Write(line);
+                }
             }
         }
 
+        private string StreamReaderReadToEnd(string filename)
+        {
+            using (StreamReader reader = new StreamReader(filename))
+            {
+                return reader.ReadToEnd();
+            }
+        }
 
+        private IList<string> StreamReaderReadLines(string filename)
+        {
+            IList<string> ret = new List<string>();
 
+            using (StreamReader reader = new StreamReader(filename))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    ret.Add(line);
+                }
+                reader.Close();
+            }
 
-
-
-
-
-
-
-
-        //public bool Exists(string filename)
-        //{
-        //    return File.Exists(filename);
-        //}
-
-        //public void Delete(string filename)
-        //{
-        //    File.Delete(filename);
-        //}
-
-        //public void CreateIfNotExists(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public string[] ToArray(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public IList<string> ToList(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public object ToObject(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public string ToString(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-
-        
-
-        //public void AppendTo(string filename, string text)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void AppendTo(string filename, string[] lines)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void AppendTo(string filename, IList<string> lines)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void AppendTo(string filename, object o)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void OverwriteTo(string filename, string text)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void OverwriteTo(string filename, string[] lines)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void OverwriteTo(string filename, IList<string> lines)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void OverwriteTo(string filename, object o)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-
-        //public void Rename(string oldFilename, string newFilename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void CopyOver(string oldFilename, string newFilename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //bool IFile.Exists(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //void IFile.Delete(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //object IFile.ToObject(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //void IFile.Rename(string oldFilename, string newFilename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //void IFile.CopyOver(string oldFilename, string newFilename)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        
+            return ret.ToArray<string>();
+        }
     }
 }

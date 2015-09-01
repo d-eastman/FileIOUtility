@@ -11,7 +11,7 @@ namespace FileIOUtility.Image
 {
     public class ImageFile : FileBase, IFile, IImageFile
     {
-        public static readonly ImageFile Instance = new ImageFile();
+        public static readonly new ImageFile Instance = new ImageFile();
 
         private ImageFile()
         {

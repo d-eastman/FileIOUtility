@@ -14,6 +14,10 @@ namespace FileIOUtility.Common
 
         void Rename(string oldFilename, string newFilename);
 
-        void CopyOver(string oldFilename, string newFilename);
+        void CopyOverwrite(string oldFilename, string newFilename);
+
+        void CopyNoOverwrite(string oldFilename, string newFilename);
+
+        void Copy(string oldFilename, string newFilename, bool okToOverwrite);
     }
 }

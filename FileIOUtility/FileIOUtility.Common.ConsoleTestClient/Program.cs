@@ -12,7 +12,7 @@ namespace FileIOUtility.Common.ConsoleTestClient
         {
             Console.WriteLine(FileBase.Instance.Exists(@"c:\temp\cat.json"));
 
-            FileBase.Instance.CopyOver(@"c:\temp\cat.json", @"c:\temp\cat.copy.json");
+            FileBase.Instance.CopyOverwrite(@"c:\temp\cat.json", @"c:\temp\cat.copy.json");
             Console.WriteLine(FileBase.Instance.Exists(@"c:\temp\cat.copy.json"));
 
             FileBase.Instance.Rename(@"c:\temp\cat.copy.json", @"c:\temp\cat.copy2.json");

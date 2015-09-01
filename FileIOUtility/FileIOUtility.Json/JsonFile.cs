@@ -10,7 +10,7 @@ namespace FileIOUtility.Json
 {
     public class JsonFile<T> : IJsonFile <T>
     {
-        public static readonly JsonFile<T> Instance = new JsonFile<T>();
+        public static readonly new JsonFile<T> Instance = new JsonFile<T>();
 
         private JsonFile()
         {

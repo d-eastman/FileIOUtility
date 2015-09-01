@@ -28,17 +28,32 @@ namespace FileIOUtility.Common
 
         public void Rename(string oldFilename, string newFilename)
         {
-            if (File.Exists(oldFilename))
-            {
-                //Only delete the destination if the old file exists
-                File.Delete(newFilename);
-            }
             File.Move(oldFilename, newFilename);
         }
 
-        public void CopyOver(string oldFilename, string newFilename)
+        public void CopyOverwrite(string oldFilename, string newFilename)
         {
             File.Copy(oldFilename, newFilename, overwrite: true);
+        }
+
+        public void CopyNoOverwrite(string oldFilename, string newFilename)
+        {
+            if (!File.Exists(newFilename))
+            {
+                File.Copy(oldFilename, newFilename, overwrite: true);
+            }
+        }
+
+        public void Copy(string oldFilename, string newFilename, bool okToOverwrite)
+        {
+            if (okToOverwrite)
+            {
+                CopyOverwrite(oldFilename, newFilename);
+            }
+            else
+            {
+                CopyNoOverwrite(oldFilename, newFilename);
+            }
         }
     }
 }
