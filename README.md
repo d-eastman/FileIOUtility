@@ -1,0 +1,1 @@
+File handling utility library experiment for managing text files, JSON files, image files.
